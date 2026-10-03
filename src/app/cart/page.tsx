@@ -10,6 +10,7 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-04] [flyqazwsx] [系統初版／購物車]
+[2026-10-04] [flyqazwsx] [加入結帳按鈕]
 */
 
 import type { Metadata } from "next";
@@ -58,18 +59,22 @@ export default async function CartPage() {
                             <CartLine key={_objItem.phoneSlug} item={_objItem} />
                         ))}
                     </ul>
-                    <div className="flex items-center justify-end gap-6 border-t border-slate-200 py-4">
+                    <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-3 border-t border-slate-200 py-4">
                         <p className="text-sm text-slate-600">
                             共 <span data-testid="cart-total-count">{objTotals.intCount}</span> 件
                         </p>
                         <p className="text-lg font-bold text-rose-600">
                             總計 <span data-testid="cart-total-price">{formatPrice(objTotals.intTotalTwd)}</span>
                         </p>
+                        {/* [2026-10-04] [結帳：前往結帳頁] */}
+                        <Link href="/checkout" className="rounded-lg bg-rose-600 px-5 py-2.5 font-medium text-white hover:bg-rose-700">
+                            結帳
+                        </Link>
                     </div>
                 </div>
             )}
 
-            <p className="mt-3 text-xs text-slate-500">結帳功能尚未開放；金額以目前本站售價計算。</p>
+            <p className="mt-3 text-xs text-slate-500">金額以目前本站售價計算。</p>
         </div>
     );
 }

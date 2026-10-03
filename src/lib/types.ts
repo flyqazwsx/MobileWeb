@@ -10,6 +10,7 @@ Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
 [2026-10-04] [flyqazwsx] [新增購物車項目型別]
+[2026-10-04] [flyqazwsx] [新增訂單型別]
 */
 
 /** 手機品牌 */
@@ -104,4 +105,34 @@ export interface CartItem {
     unitPriceTwd: number;
     /** 數量 */
     quantity: number;
+}
+
+/** 訂單狀態：已付款、已取消 */
+export type OrderStatus = "PAID" | "CANCELLED";
+
+/** 訂單明細（品名、單價為下單當下快照） */
+export interface OrderItem {
+    phoneSlug: string;
+    phoneName: string;
+    imageUrl: string | null;
+    unitPriceTwd: number;
+    quantity: number;
+}
+
+/** 訂單 */
+export interface Order {
+    orderNo: string;
+    status: OrderStatus;
+    recipientName: string;
+    recipientPhone: string;
+    shippingAddress: string;
+    paymentMethod: "CREDIT_CARD";
+    cardBrand: string;
+    cardLast4: string;
+    totalTwd: number;
+    /** 下單時間（ISO 8601） */
+    createdAt: string;
+    /** 取消時間（ISO 8601）；未取消為 null */
+    cancelledAt: string | null;
+    items: OrderItem[];
 }
