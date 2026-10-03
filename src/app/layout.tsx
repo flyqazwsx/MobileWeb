@@ -9,9 +9,11 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
+[2026-10-03] [flyqazwsx] [加入會員介面 Provider]
 */
 
 import type { Metadata } from "next";
+import AuthProvider from "@/components/auth-provider";
 import SiteHeader from "@/components/site-header";
 import "./globals.css";
 
@@ -32,23 +34,26 @@ export default function RootLayout(_objProps: LayoutProps<"/">) {
     return (
         <html lang="zh-Hant-TW" className="h-full antialiased">
             <body className="flex min-h-full flex-col font-sans">
-                <SiteHeader />
-                <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{_objProps.children}</main>
-                <footer className="border-t border-slate-200 bg-white">
-                    <div className="mx-auto max-w-6xl px-4 py-4 text-xs leading-relaxed text-slate-500">
-                        <p>
-                            ⚠️ 原型階段：本站規格與價格為示範資料，尚未與
-                            <a href="https://www.sogi.com.tw/" className="mx-1 underline" target="_blank" rel="noreferrer">
-                                手機王
-                            </a>
-                            、
-                            <a href="https://www.jyes.com.tw/" className="mx-1 underline" target="_blank" rel="noreferrer">
-                                傑昇通信
-                            </a>
-                            逐筆核對，實際以各通路公告為準。
-                        </p>
-                    </div>
-                </footer>
+                {/* [2026-10-03] [會員功能：登入狀態與會員介面元件需要 Provider] */}
+                <AuthProvider className="flex flex-1 flex-col">
+                    <SiteHeader />
+                    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{_objProps.children}</main>
+                    <footer className="border-t border-slate-200 bg-white">
+                        <div className="mx-auto max-w-6xl px-4 py-4 text-xs leading-relaxed text-slate-500">
+                            <p>
+                                ⚠️ 原型階段：本站規格與價格為示範資料，尚未與
+                                <a href="https://www.sogi.com.tw/" className="mx-1 underline" target="_blank" rel="noreferrer">
+                                    手機王
+                                </a>
+                                、
+                                <a href="https://www.jyes.com.tw/" className="mx-1 underline" target="_blank" rel="noreferrer">
+                                    傑昇通信
+                                </a>
+                                逐筆核對，實際以各通路公告為準。
+                            </p>
+                        </div>
+                    </footer>
+                </AuthProvider>
             </body>
         </html>
     );
