@@ -34,7 +34,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - 這個網站最後要部署到 Vercel + Neon，因此需要使用者在這兩個雲端供應商有帳號，如果需要取得 Access Token 也放在 `.env.local` 並且幫忙部署
 - 使用 Next.js 的所有需要堆疊
-- 將這個網站儲存在 GitHub 上，是 Private Repo，名稱為 MobileWeb（2026-10-03 由 Public 改為 Private）
+- 將這個網站儲存在 GitHub 上，是 Public Repo，名稱為 MobileWeb（https://github.com/flyqazwsx/MobileWeb）
 
 # 資料來源
 
