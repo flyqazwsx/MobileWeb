@@ -48,3 +48,6 @@ next-env.d.ts
 
 # env 範本可進版控
 !.env.example
+
+# Playwright MCP 截圖與快照
+/.playwright-mcp/

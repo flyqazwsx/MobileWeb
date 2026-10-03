@@ -14,6 +14,18 @@ test.describe("首頁熱門排行", () => {
         expect(arrRanks).toEqual(Array.from({ length: 20 }, (_, _intIndex) => String(_intIndex + 1)));
     });
 
+    test("熱門手機都顯示實際產品圖，且圖片載入成功", async ({ page }) => {
+        await page.goto("/");
+        const locImages = page.getByTestId("phone-card").locator("img");
+        await expect(locImages).toHaveCount(20);
+
+        // 捲到底讓延遲載入的圖片全部載入，再確認每張都有實際尺寸
+        for (const locImage of await locImages.all()) {
+            await locImage.scrollIntoViewIfNeeded();
+            await expect.poll(() => locImage.evaluate((_elemImg: HTMLImageElement) => _elemImg.naturalWidth)).toBeGreaterThan(0);
+        }
+    });
+
     test("點擊第一名進入詳細說明頁", async ({ page }) => {
         await page.goto("/");
         await page.getByTestId("phone-card").first().click();
@@ -61,6 +73,14 @@ test.describe("手機詳細說明頁", () => {
         const locReviews = page.getByTestId("review-link");
         await expect(locReviews).toHaveCount(3);
         await expect(locReviews.first()).toHaveAttribute("href", /youtube\.com\/results\?search_query=/);
+    });
+
+    test("詳細頁顯示產品圖；沒有圖片的手機改顯示佔位圖", async ({ page }) => {
+        await page.goto("/phones/galaxy-s25-ultra");
+        await expect(page.getByRole("img", { name: "Samsung Galaxy S25 Ultra", exact: true })).toBeVisible();
+
+        await page.goto("/phones/nothing-phone-3a-pro");
+        await expect(page.getByRole("img", { name: "Nothing Phone (3a) Pro 示意圖" })).toBeVisible();
     });
 
     test("麵包屑可回到品牌頁", async ({ page }) => {

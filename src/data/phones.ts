@@ -35,7 +35,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 1,
         msrpTwd: 44900,
         salePriceTwd: 43490,
-        imageUrl: null,
+        imageUrl: "/images/phones/iphone-17-pro-max.jpg",
         specs: {
             dimensions: { heightMm: 163.4, widthMm: 78.0, depthMm: 8.75 },
             weightG: 231,
@@ -62,7 +62,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 2,
         msrpTwd: 39900,
         salePriceTwd: 38690,
-        imageUrl: null,
+        imageUrl: "/images/phones/iphone-17-pro.jpg",
         specs: {
             dimensions: { heightMm: 150.0, widthMm: 71.9, depthMm: 8.75 },
             weightG: 204,
@@ -89,7 +89,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 3,
         msrpTwd: 29900,
         salePriceTwd: 28990,
-        imageUrl: null,
+        imageUrl: "/images/phones/iphone-17.jpg",
         specs: {
             dimensions: { heightMm: 149.6, widthMm: 71.5, depthMm: 7.95 },
             weightG: 177,
@@ -115,7 +115,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 9,
         msrpTwd: 36900,
         salePriceTwd: 34990,
-        imageUrl: null,
+        imageUrl: "/images/phones/iphone-air.jpg",
         specs: {
             dimensions: { heightMm: 156.2, widthMm: 74.7, depthMm: 5.64 },
             weightG: 165,
@@ -138,7 +138,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 14,
         msrpTwd: 21900,
         salePriceTwd: 19990,
-        imageUrl: null,
+        imageUrl: "/images/phones/iphone-16e.jpg",
         specs: {
             dimensions: { heightMm: 146.7, widthMm: 71.5, depthMm: 7.8 },
             weightG: 167,
@@ -163,7 +163,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 4,
         msrpTwd: 42900,
         salePriceTwd: 36990,
-        imageUrl: null,
+        imageUrl: "/images/phones/galaxy-s25-ultra.jpg",
         specs: {
             dimensions: { heightMm: 162.8, widthMm: 77.6, depthMm: 8.2 },
             weightG: 218,
@@ -191,7 +191,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 10,
         msrpTwd: 57990,
         salePriceTwd: 53990,
-        imageUrl: null,
+        imageUrl: "/images/phones/galaxy-z-fold7.jpg",
         specs: {
             dimensions: { heightMm: 158.4, widthMm: 143.2, depthMm: 4.2 },
             weightG: 215,
@@ -218,7 +218,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 13,
         msrpTwd: 36990,
         salePriceTwd: 32990,
-        imageUrl: null,
+        imageUrl: "/images/phones/galaxy-z-flip7.jpg",
         specs: {
             dimensions: { heightMm: 166.7, widthMm: 75.2, depthMm: 6.5 },
             weightG: 188,
@@ -244,7 +244,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 15,
         msrpTwd: 27900,
         salePriceTwd: 22990,
-        imageUrl: null,
+        imageUrl: "/images/phones/galaxy-s25.jpg",
         specs: {
             dimensions: { heightMm: 146.9, widthMm: 70.5, depthMm: 7.2 },
             weightG: 162,
@@ -271,7 +271,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 11,
         msrpTwd: 13990,
         salePriceTwd: 11990,
-        imageUrl: null,
+        imageUrl: "/images/phones/galaxy-a56.jpg",
         specs: {
             dimensions: { heightMm: 162.2, widthMm: 77.5, depthMm: 7.4 },
             weightG: 198,
@@ -300,7 +300,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 6,
         msrpTwd: 33990,
         salePriceTwd: 31990,
-        imageUrl: null,
+        imageUrl: "/images/phones/pixel-10-pro.jpg",
         specs: {
             dimensions: { heightMm: 152.8, widthMm: 72.0, depthMm: 8.6 },
             weightG: 207,
@@ -327,7 +327,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 12,
         msrpTwd: 26990,
         salePriceTwd: 24990,
-        imageUrl: null,
+        imageUrl: "/images/phones/pixel-10.jpg",
         specs: {
             dimensions: { heightMm: 152.8, widthMm: 72.0, depthMm: 8.6 },
             weightG: 204,
@@ -356,7 +356,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 18,
         msrpTwd: 44990,
         salePriceTwd: 41990,
-        imageUrl: null,
+        imageUrl: "/images/phones/xperia-1-vii.jpg",
         specs: {
             dimensions: { heightMm: 162.0, widthMm: 74.0, depthMm: 8.2 },
             weightG: 197,
@@ -385,7 +385,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 16,
         msrpTwd: 24990,
         salePriceTwd: 22990,
-        imageUrl: null,
+        imageUrl: "/images/phones/zenfone-12-ultra.jpg",
         specs: {
             dimensions: { heightMm: 163.8, widthMm: 77.0, depthMm: 8.9 },
             weightG: 220,
@@ -412,7 +412,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: null,
         msrpTwd: 37990,
         salePriceTwd: 33990,
-        imageUrl: null,
+        imageUrl: "/images/phones/rog-phone-9-pro.jpg",
         specs: {
             dimensions: { heightMm: 163.8, widthMm: 76.8, depthMm: 8.9 },
             weightG: 227,
@@ -441,7 +441,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 5,
         msrpTwd: 21990,
         salePriceTwd: 19990,
-        imageUrl: null,
+        imageUrl: "/images/phones/xiaomi-15t-pro.jpg",
         specs: {
             dimensions: { heightMm: 162.7, widthMm: 77.9, depthMm: 8.0 },
             weightG: 210,
@@ -468,7 +468,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 8,
         msrpTwd: 15990,
         salePriceTwd: 14490,
-        imageUrl: null,
+        imageUrl: "/images/phones/xiaomi-15t.jpg",
         specs: {
             dimensions: { heightMm: 163.2, widthMm: 78.0, depthMm: 7.5 },
             weightG: 194,
@@ -495,7 +495,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: null,
         msrpTwd: 37990,
         salePriceTwd: 33990,
-        imageUrl: null,
+        imageUrl: "/images/phones/xiaomi-15-ultra.jpg",
         specs: {
             dimensions: { heightMm: 161.3, widthMm: 75.3, depthMm: 9.35 },
             weightG: 226,
@@ -525,7 +525,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 19,
         msrpTwd: 35990,
         salePriceTwd: 31990,
-        imageUrl: null,
+        imageUrl: "/images/phones/oppo-find-x8-pro.jpg",
         specs: {
             dimensions: { heightMm: 162.3, widthMm: 76.7, depthMm: 8.24 },
             weightG: 215,
@@ -553,7 +553,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 7,
         msrpTwd: 16990,
         salePriceTwd: 14990,
-        imageUrl: null,
+        imageUrl: "/images/phones/oppo-reno14.jpg",
         specs: {
             dimensions: { heightMm: 157.9, widthMm: 74.7, depthMm: 7.42 },
             weightG: 187,
@@ -582,7 +582,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 17,
         msrpTwd: 36990,
         salePriceTwd: 32990,
-        imageUrl: null,
+        imageUrl: "/images/phones/vivo-x200-pro.jpg",
         specs: {
             dimensions: { heightMm: 162.4, widthMm: 75.9, depthMm: 8.5 },
             weightG: 223,
@@ -609,7 +609,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: 20,
         msrpTwd: 17990,
         salePriceTwd: 15990,
-        imageUrl: null,
+        imageUrl: "/images/phones/vivo-v60.jpg",
         specs: {
             dimensions: { heightMm: 163.5, widthMm: 77.0, depthMm: 7.75 },
             weightG: 201,
@@ -638,7 +638,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: null,
         msrpTwd: 36988,
         salePriceTwd: 32990,
-        imageUrl: null,
+        imageUrl: "/images/phones/razr-60-ultra.jpg",
         specs: {
             dimensions: { heightMm: 171.5, widthMm: 74.0, depthMm: 7.2 },
             weightG: 199,
@@ -664,7 +664,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: null,
         msrpTwd: 10988,
         salePriceTwd: 9490,
-        imageUrl: null,
+        imageUrl: "/images/phones/moto-g86.jpg",
         specs: {
             dimensions: { heightMm: 161.2, widthMm: 74.7, depthMm: 7.8 },
             weightG: 185,
@@ -692,7 +692,7 @@ export const arrPhoneData: Phone[] = [
         hotRank: null,
         msrpTwd: 26990,
         salePriceTwd: 24990,
-        imageUrl: null,
+        imageUrl: "/images/phones/nothing-phone-3.jpg",
         specs: {
             dimensions: { heightMm: 160.6, widthMm: 75.6, depthMm: 9.0 },
             weightG: 218,

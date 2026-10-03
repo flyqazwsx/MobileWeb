@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { arrBrandData } from "@/data/brands";
 import { arrPhoneData } from "@/data/phones";
@@ -43,6 +45,16 @@ describe("示範資料完整性", () => {
             expect(objPhone.specs.rearCameras.length).toBeGreaterThan(0);
             expect(objPhone.specs.storageGb.length).toBeGreaterThan(0);
             expect(objPhone.specs.ramGb.length).toBeGreaterThan(0);
+        }
+    });
+
+    it("產品圖路徑為 /images/phones/{代碼}.jpg，且檔案存在於 public", () => {
+        for (const objPhone of arrPhoneData) {
+            if (objPhone.imageUrl === null) {
+                continue;
+            }
+            expect(objPhone.imageUrl).toBe(`/images/phones/${objPhone.slug}.jpg`);
+            expect(existsSync(path.join(process.cwd(), "public", objPhone.imageUrl)), objPhone.slug).toBe(true);
         }
     });
 });
