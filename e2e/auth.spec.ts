@@ -28,7 +28,7 @@ test.describe("會員註冊與登入", () => {
 
         // 會員專區顯示自己的電子郵件
         await page.goto("/account/settings");
-        await expect(page.getByRole("heading", { name: "會員專區" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "帳戶管理" })).toBeVisible();
         await expect(page.locator(`input[value="${strEmail}"]`)).toBeVisible();
 
         // 登出後頁首恢復登入連結，會員專區再次被擋
@@ -65,7 +65,7 @@ test.describe("會員註冊與登入", () => {
         await expect(page).toHaveURL(/\/$/);
         await signOutFromMenu(page);
 
-        await signUp(page, strEmail);
+        await signUp(page, strEmail, false);
         await expect(page.getByText("這個電子郵件已經註冊過")).toBeVisible();
         await expect(page).toHaveURL(/\/auth\/sign-up/);
     });

@@ -15,15 +15,12 @@ export function createTestEmail(_strPrefix: string): string {
 }
 
 /**
- * 以表單註冊新帳號（成功後網站導回首頁）
+ * 填寫註冊表單並確認三個欄位都有值
  * @param {Page} _objPage 頁面
  * @param {string} _strEmail 電子郵件
  * @returns {Promise<void>}
  */
-export async function signUp(_objPage: Page, _strEmail: string): Promise<void> {
-    await _objPage.goto("/auth/sign-up");
-
-    // 頁面 hydration 完成前填入的值可能被 React 重設（實測密碼欄被清空），確認三個欄位都有值才送出
+async function fillSignUpForm(_objPage: Page, _strEmail: string): Promise<void> {
     await expect(async () => {
         await _objPage.getByLabel("名稱").fill("E2E 測試");
         await _objPage.getByLabel("電子郵件").fill(_strEmail);
@@ -32,8 +29,38 @@ export async function signUp(_objPage: Page, _strEmail: string): Promise<void> {
         await expect(_objPage.getByLabel("電子郵件")).toHaveValue(_strEmail, { timeout: 500 });
         await expect(_objPage.getByLabel("密碼")).toHaveValue(STR_TEST_PASSWORD, { timeout: 500 });
     }).toPass({ timeout: 10_000 });
+}
 
-    await _objPage.getByRole("button", { name: "建立帳號" }).click();
+/**
+ * 以表單註冊新帳號
+ * @param {Page} _objPage 頁面
+ * @param {string} _strEmail 電子郵件
+ * @param {boolean} _blnExpectSuccess 是否預期註冊成功（成功時網站會離開註冊頁）；測試重複註冊時傳 false
+ * @returns {Promise<void>}
+ */
+export async function signUp(_objPage: Page, _strEmail: string, _blnExpectSuccess: boolean = true): Promise<void> {
+    await _objPage.goto("/auth/sign-up");
+
+    // 表單可能在填寫後被重新掛載而清空（實測密碼欄會被清掉），因此送出後確認結果，未達預期就重填再送
+    if (!_blnExpectSuccess) {
+        // 預期失敗（例如重複註冊）：重試到出現錯誤提示為止
+        await expect(async () => {
+            await fillSignUpForm(_objPage, _strEmail);
+            await _objPage.getByRole("button", { name: "建立帳號" }).click();
+            await expect(_objPage.locator("[data-sonner-toast]")).not.toHaveCount(0, { timeout: 5_000 });
+        }).toPass({ timeout: 30_000 });
+        return;
+    }
+
+    await expect(async () => {
+        if (!_objPage.url().includes("/auth/sign-up")) {
+            return;
+        }
+
+        await fillSignUpForm(_objPage, _strEmail);
+        await _objPage.getByRole("button", { name: "建立帳號" }).click();
+        await expect(_objPage).not.toHaveURL(/\/auth\/sign-up/, { timeout: 5_000 });
+    }).toPass({ timeout: 30_000 });
 }
 
 /**

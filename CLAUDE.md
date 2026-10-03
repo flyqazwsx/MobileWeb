@@ -78,14 +78,15 @@ Next.js 16（App Router、Turbopack、React 19、Tailwind CSS v4、TypeScript）
   - Neon 代管版沒有 `delete-user` API（回 404），所以不提供刪除帳號。
 - **購物車**：`TBL_CART_ITEM`（PK 會員 + 手機，數量 1–99）。`USER_ID` 外鍵到 `neon_auth."user"(id)` ON DELETE CASCADE；`PHONE_SLUG` 外鍵為 `DEFERRABLE INITIALLY DEFERRED`，讓 `db:seed` 在同一交易內刪除再重建手機資料不被擋（真的移除某支手機時 seed 會在 commit 失敗，需先清購物車）。規則在 `src/lib/cart.ts`、資料存取在 `src/lib/cart-repository.ts`、Server Actions 在 `src/app/cart/actions.ts`（一律以伺服器端 session 取會員 ID）。頁首件數由 `CartProvider`（瀏覽器端 context，件數連同會員 ID 保存）供 `CartIcon` 與 `AddToCart` 共用；`/cart` 為 `force-dynamic` 並由 proxy 保護。
 - **結帳**：`/checkout`（表單預填 `objDummyCheckout`）→ `placeOrderAction`（`src/app/checkout/actions.ts`）→ `createOrderFromCart` 在單一 REPEATABLE READ 交易內建立訂單、明細並清空購物車 → `/checkout/complete/[orderNo]`。規則在 `src/lib/checkout.ts`：只接受測試卡號，資料庫只存卡別與末四碼；檢核失敗回傳的 `values` 不含卡號與安全碼（React 19 form action 送出後會重設表單，靠 `values` 保留輸入）。
-- E2E 註冊共用 `e2e/auth-helpers.ts` 的 `signUp`：hydration 前填入的密碼會被 React 清掉，所以用 `toPass` 確認欄位有值才送出。
+- **訂單管理**：`/orders`（列表、取消、查看物流）與 `/orders/[orderNo]/tracking`。物流與取消規則在 `src/lib/order-tracking.ts`（依下單時間推算，示範用）；取消時限 `INT_CANCELLABLE_HOURS` 同時用在 `cancelOrder` 的 SQL 條件。頁首 `UserButton` 以 `disableDefaultLinks` + `additionalLinks` 只留「帳戶管理」（`/account/security`）、「訂單管理」、「登出」。
+- E2E 註冊共用 `e2e/auth-helpers.ts` 的 `signUp`：註冊表單在填寫後可能被重新掛載而清空密碼，所以送出後檢查是否離開註冊頁、沒有就重填重送（預期失敗的情境傳 `false`，改為等錯誤 toast）。不要用 `waitForLoadState("networkidle")`，登出後的頁面不會進入 idle。
 - **評測**：`src/lib/review-links.ts` 目前依手機名稱產生 YouTube/Facebook/Instagram 搜尋連結，尚未收錄實際影片。
 - **熱門月份**：首頁標題用 `new Date()` 計算，因頁面為靜態產生，顯示的是 build 當下的月份。
 
 # 目前狀態與待辦
 
 - 規格與價格是**示範資料**（依公開資訊整理，未與手機王、傑昇通信逐筆核對）；`src/data/data-integrity.test.ts` 定義資料必須滿足的規則（代碼唯一、品牌對應、排名不重複、售價 ≤ 建議售價等），日後資料匯入也要通過。
-- 已完成：Neon 資料庫、Vercel 部署（push `main` 自動部署）、產品圖（Nothing Phone (3a) Pro 手機王未收錄，仍為佔位圖）、會員註冊登入（Email + 密碼）、購物車、結帳（示範金流）。
+- 已完成：Neon 資料庫、Vercel 部署（push `main` 自動部署）、產品圖（Nothing Phone (3a) Pro 手機王未收錄，仍為佔位圖）、會員註冊登入（Email + 密碼）、購物車、結帳（示範金流）、訂單管理（示範物流）。
 - 尚未完成：正式資料爬取（手機王、傑昇通信）、評測影片收錄、真實金流。
 
 # 程式碼慣例
