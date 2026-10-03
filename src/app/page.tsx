@@ -9,11 +9,15 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
+[2026-10-03] [flyqazwsx] [改接 Neon 資料庫，每小時重新產生頁面]
 */
 
 import PhoneCard from "@/components/phone-card";
 import { formatRankingMonth } from "@/lib/format";
 import { INT_HOT_PHONE_LIMIT, getBrands, getHotPhones } from "@/lib/phone-repository";
+
+// [2026-10-03] [改接 Neon 資料庫] 資料庫更新後最慢一小時反映到頁面（ISR）
+export const revalidate = 3600;
 
 /**
  * 首頁：本月熱門手機排行

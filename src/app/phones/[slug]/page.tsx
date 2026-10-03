@@ -9,6 +9,7 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
+[2026-10-03] [flyqazwsx] [改接 Neon 資料庫，新增手機免重新部署、每小時重新產生頁面]
 */
 
 import type { Metadata } from "next";
@@ -25,8 +26,12 @@ import {
 import { getAllPhoneSlugs, getBrandBySlug, getPhoneBySlug } from "@/lib/phone-repository";
 import { createReviewLinks } from "@/lib/review-links";
 
-// 只產生已知手機，其餘網址回 404
-export const dynamicParams = false;
+// [2026-10-03] [改接 Neon 資料庫] 建置時先產生已知手機；之後新增到資料庫的手機於第一次造訪時產生，
+// 資料庫查無此手機時由頁面本體回 404
+export const dynamicParams = true;
+
+// [2026-10-03] [改接 Neon 資料庫] 資料庫更新後最慢一小時反映到頁面（ISR）
+export const revalidate = 3600;
 
 /**
  * 預先產生所有手機詳細頁

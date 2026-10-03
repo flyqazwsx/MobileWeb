@@ -33,6 +33,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # 技術堆疊
 
 - 這個網站最後要部署到 Vercel + Neon，因此需要使用者在這兩個雲端供應商有帳號，如果需要取得 Access Token 也放在 `.env.local` 並且幫忙部署
+- 資料庫使用 Vercel Marketplace 提供的 Neon（資源名稱 `mobile-web-db`，區域 Singapore `sin1`，已連到 Vercel 專案 `mobile-web`）；環境變數前綴 `DATABASE`（`DATABASE_URL`、`DATABASE_URL_UNPOOLED`），本機以 `npx vercel env pull .env.local` 取得
+- Vercel Functions 區域固定為 `sin1`（`vercel.json`），與資料庫同區
 - 使用 Next.js 的所有需要堆疊
 - 將這個網站儲存在 GitHub 上，是 Public Repo，名稱為 MobileWeb（https://github.com/flyqazwsx/MobileWeb）
 

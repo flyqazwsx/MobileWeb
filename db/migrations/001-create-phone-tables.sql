@@ -1,0 +1,70 @@
+/*
+MobileWeb Migration 001
+名稱：建立品牌、手機、相機資料表
+說明：Neon（PostgreSQL）初始結構。所有敘述皆可重複執行（IF NOT EXISTS）；
+      PostgreSQL 會把未加引號的識別字轉成小寫，查詢結果欄位名稱因此為小寫
+
+[Change Log]
+--------------------------------------------------------------------------------
+Format: [YYYY-MM-DD] [Author] [Description]
+Rule: One change per line. Append new entries at the bottom.
+--------------------------------------------------------------------------------
+[2026-10-03] [flyqazwsx] [系統初版／改接 Neon 資料庫]
+*/
+
+-- 品牌（上方選單）
+CREATE TABLE IF NOT EXISTS TBL_BRAND (
+    SLUG        VARCHAR(50)  NOT NULL,
+    NAME        VARCHAR(100) NOT NULL,
+    COLOR       CHAR(7)      NOT NULL,
+    SORT_ORDER  INTEGER      NOT NULL,
+    CONSTRAINT PK_TBL_BRAND PRIMARY KEY (SLUG)
+);
+
+-- 手機（價格與規格參數）
+CREATE TABLE IF NOT EXISTS TBL_PHONE (
+    SLUG                VARCHAR(100)  NOT NULL,
+    BRAND_SLUG          VARCHAR(50)   NOT NULL,
+    NAME                VARCHAR(200)  NOT NULL,
+    RELEASE_MONTH       CHAR(7)       NOT NULL,
+    HOT_RANK            INTEGER       NULL,
+    MSRP_TWD            INTEGER       NOT NULL,
+    SALE_PRICE_TWD      INTEGER       NOT NULL,
+    IMAGE_URL           TEXT          NULL,
+    HEIGHT_MM           NUMERIC(6, 2) NOT NULL,
+    WIDTH_MM            NUMERIC(6, 2) NOT NULL,
+    DEPTH_MM            NUMERIC(6, 2) NOT NULL,
+    WEIGHT_G            NUMERIC(6, 1) NOT NULL,
+    CPU                 VARCHAR(100)  NOT NULL,
+    RAM_GB              INTEGER[]     NOT NULL,
+    STORAGE_GB          INTEGER[]     NOT NULL,
+    DISPLAY_SIZE_INCH   NUMERIC(4, 2) NOT NULL,
+    DISPLAY_RESOLUTION  VARCHAR(50)   NOT NULL,
+    DISPLAY_PANEL       VARCHAR(100)  NOT NULL,
+    DISPLAY_REFRESH_HZ  INTEGER       NOT NULL,
+    VIDEO               VARCHAR(200)  NOT NULL,
+    BATTERY_MAH         INTEGER       NOT NULL,
+    OS                  VARCHAR(50)   NOT NULL,
+    CONSTRAINT PK_TBL_PHONE PRIMARY KEY (SLUG),
+    CONSTRAINT FK_TBL_PHONE_BRAND FOREIGN KEY (BRAND_SLUG) REFERENCES TBL_BRAND (SLUG),
+    CONSTRAINT CK_TBL_PHONE_RELEASE_MONTH CHECK (RELEASE_MONTH ~ '^\d{4}-(0[1-9]|1[0-2])$'),
+    CONSTRAINT CK_TBL_PHONE_PRICE CHECK (MSRP_TWD > 0 AND SALE_PRICE_TWD > 0 AND SALE_PRICE_TWD <= MSRP_TWD),
+    CONSTRAINT CK_TBL_PHONE_CAPACITY CHECK (CARDINALITY(RAM_GB) > 0 AND CARDINALITY(STORAGE_GB) > 0)
+);
+
+CREATE INDEX IF NOT EXISTS IX_TBL_PHONE_BRAND_SLUG ON TBL_PHONE (BRAND_SLUG);
+
+-- 熱門排名不可重複（未上榜為 NULL，不受限制）
+CREATE UNIQUE INDEX IF NOT EXISTS UIX_TBL_PHONE_HOT_RANK ON TBL_PHONE (HOT_RANK);
+
+-- 相機鏡頭（IS_FRONT 區分前後鏡頭，SORT_ORDER 為顯示順序）
+CREATE TABLE IF NOT EXISTS TBL_PHONE_CAMERA (
+    PHONE_SLUG  VARCHAR(100)  NOT NULL,
+    IS_FRONT    BOOLEAN       NOT NULL,
+    SORT_ORDER  INTEGER       NOT NULL,
+    LENS_ROLE   VARCHAR(50)   NOT NULL,
+    MEGAPIXELS  NUMERIC(5, 1) NOT NULL,
+    DETAIL      VARCHAR(200)  NOT NULL,
+    CONSTRAINT PK_TBL_PHONE_CAMERA PRIMARY KEY (PHONE_SLUG, IS_FRONT, SORT_ORDER),
+    CONSTRAINT FK_TBL_PHONE_CAMERA_PHONE FOREIGN KEY (PHONE_SLUG) REFERENCES TBL_PHONE (SLUG) ON DELETE CASCADE
+);

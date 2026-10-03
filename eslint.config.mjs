@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 測試覆蓋率報告（vitest --coverage 產生）
+    "coverage/**",
   ]),
 ]);
 
