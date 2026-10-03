@@ -10,9 +10,11 @@ Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
 [2026-10-03] [flyqazwsx] [右上角加入會員選單]
+[2026-10-04] [flyqazwsx] [右上角加入購物車件數圖示]
 */
 
 import Link from "next/link";
+import CartIcon from "@/components/cart-icon";
 import UserMenu from "@/components/user-menu";
 import { getBrands } from "@/lib/phone-repository";
 
@@ -32,6 +34,8 @@ export default async function SiteHeader() {
                 <span className="hidden text-sm text-slate-500 sm:inline">全台手機規格與價格一次看</span>
                 {/* [2026-10-03] [會員選單：登入／註冊或使用者選單] */}
                 <UserMenu />
+                {/* [2026-10-04] [購物車件數圖示，點擊進入購物車頁] */}
+                <CartIcon />
             </div>
             <nav aria-label="品牌選單" className="mx-auto max-w-6xl overflow-x-auto px-4 pb-2">
                 <ul className="flex gap-2 whitespace-nowrap">

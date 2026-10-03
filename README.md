@@ -1,6 +1,6 @@
 # MobileWeb
 
-台灣手機產品瀏覽網站：首頁列出本月熱門手機前 20 名，上方選單依品牌瀏覽，點擊進入手機詳細說明頁（規格、相機、官方建議售價、本站售價、網路評測連結）。訪客可註冊會員（Email + 密碼），登入後進入會員專區管理帳號。
+台灣手機產品瀏覽網站：首頁列出本月熱門手機前 20 名，上方選單依品牌瀏覽，點擊進入手機詳細說明頁（規格、相機、官方建議售價、本站售價、網路評測連結）。訪客可註冊會員（Email + 密碼），登入後進入會員專區管理帳號，並可在手機頁選擇數量加入購物車（頁首顯示購物車件數）。
 
 正式網址：<https://mobile-web-self.vercel.app>（推送到 `main` 自動部署；其他分支產生預覽網址）
 
@@ -20,12 +20,12 @@
 ```
 db/migrations/        資料表建立 SQL（可重複執行）
 scripts/              資料庫維運腳本（建表、匯入示範資料）
-src/app/              頁面（首頁、品牌頁、手機詳細說明頁、會員 auth/ 與 account/、API api/auth/）
+src/app/              頁面（首頁、品牌頁、手機詳細說明頁、會員 auth/ 與 account/、購物車 cart/、API api/auth/）
 src/components/       共用元件
 src/data/             示範資料（匯入資料庫的來源）
 src/lib/              資料存取層、資料列轉換、格式化工具
 src/lib/auth/         會員驗證（伺服器／瀏覽器端實例、繁體中文字串、錯誤訊息翻譯）
-src/proxy.ts          路由保護：未登入進入 /account 導向登入頁
+src/proxy.ts          路由保護：未登入進入 /account、/cart 導向登入頁
 public/images/phones/ 手機產品圖（{代碼}.jpg）
 e2e/                  Playwright E2E 測試
 ```
@@ -85,6 +85,15 @@ npm run dev
 - **信任網域**：Neon Console → Settings → Auth → Domains 必須列出網站網址，否則註冊、登入會回 `Invalid origin`（localhost 預設允許）。目前已加入正式站 `https://mobile-web-self.vercel.app` 與分支預覽網址；新分支或自訂網域要另外加。
 - 不提供刪除帳號：Neon 代管的 Better Auth 沒有 `delete-user` API。
 - E2E 註冊的測試帳號一律用 `e2e-*@example.com`，測試結束後由 `e2e/global-teardown.ts` 以 SQL 刪除。
+
+## 購物車
+
+- 只有登入會員能購物；未登入時手機頁顯示「登入後購買」，登入後回到同一支手機頁。
+- 手機頁選擇數量（1–99）加入購物車，同一支手機重複加入時數量累加（上限 99）。
+- 頁首購物車圖示顯示總件數（數量加總），點擊進入 `/cart`：可修改數量、移除，並顯示總金額（以目前本站售價計算）。
+- 資料存在 `TBL_CART_ITEM`（`db/migrations/002-create-cart-table.sql`），換裝置登入也看得到；會員被刪除時購物車一併刪除。
+- 讀寫一律經 `src/app/cart/actions.ts`（Server Actions），在伺服器端以 session 取得會員 ID，不信任用戶端傳來的身分。
+- 尚未提供：結帳、訂單、付款、選擇容量或顏色。
 
 ## 資料更新
 

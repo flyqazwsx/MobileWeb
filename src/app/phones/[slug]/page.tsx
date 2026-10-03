@@ -10,10 +10,12 @@ Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
 [2026-10-03] [flyqazwsx] [改接 Neon 資料庫，新增手機免重新部署、每小時重新產生頁面]
+[2026-10-04] [flyqazwsx] [價格下方加入購物車（數量選擇）]
 */
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import AddToCart from "@/components/add-to-cart";
 import { notFound } from "next/navigation";
 import PhoneImage from "@/components/phone-image";
 import {
@@ -140,6 +142,9 @@ export default async function PhoneDetailPage(_objProps: PageProps<"/phones/[slu
                             價格為 {formatCapacityList([objSpecs.storageGb[0]])} 版本
                         </p>
                     </dl>
+
+                    {/* [2026-10-04] [購物車：登入狀態在瀏覽器端判斷，頁面仍可靜態產生] */}
+                    <AddToCart phoneSlug={objPhone.slug} phoneName={objPhone.name} />
                 </div>
             </div>
 
