@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* 會員介面元件（Neon Auth UI）的主題變數；Tailwind v4 專案只匯入這一個，不可再匯入 auth-ui/css */
+@import "@neondatabase/auth-ui/tailwind";
 
 /* 原型階段固定淺色主題；中文字型以系統內建字型為主 */
 @theme inline {

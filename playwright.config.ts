@@ -8,6 +8,8 @@ export default defineConfig({
     fullyParallel: true,
     retries: process.env.CI ? 2 : 0,
     reporter: "list",
+    // 會員測試註冊的 e2e-*@example.com 帳號於全部測試結束後清除
+    globalTeardown: "./e2e/global-teardown.ts",
     use: {
         baseURL: `http://localhost:${INT_E2E_PORT}`,
         trace: "on-first-retry",
