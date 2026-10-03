@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { addCartItem, getCartCount } from "@/lib/cart-repository";
 import { createOrderNo, objDummyCheckout, validateCheckoutForm, type CheckoutOrderData } from "@/lib/checkout";
 import { getSql } from "@/lib/db";
-import { convertOrderRow, createOrderFromCart, getOrderByNo } from "@/lib/order-repository";
+import { cancelOrder, convertOrderRow, createOrderFromCart, getOrderByNo, getOrders } from "@/lib/order-repository";
 
 // 訂單資料存取層整合測試：直接連 Neon，建立一位暫時的測試會員（e2e-*@example.com），測完刪除（訂單隨會員刪除）
 const blnHasDatabase = Boolean(process.env.DATABASE_URL);
@@ -102,5 +102,35 @@ describe.skipIf(!blnHasDatabase)("order-repository（Neon）", () => {
         await createOrderFromCart(strUserId, strOrderNo, objOrderData);
 
         expect(await getOrderByNo("00000000-0000-0000-0000-000000000000", strOrderNo)).toBeNull();
+    });
+
+    it("訂單列表新到舊；取消後狀態與取消時間更新，且不能重複取消", async () => {
+        await addCartItem(strUserId, "galaxy-s25", 1);
+        const strFirstNo = createOrderNo(new Date());
+        await createOrderFromCart(strUserId, strFirstNo, objOrderData);
+        await addCartItem(strUserId, "pixel-10", 1);
+        const strSecondNo = createOrderNo(new Date());
+        await createOrderFromCart(strUserId, strSecondNo, objOrderData);
+
+        const arrNos = (await getOrders(strUserId)).map((_objOrder) => _objOrder.orderNo);
+        expect(arrNos.indexOf(strSecondNo)).toBeLessThan(arrNos.indexOf(strFirstNo));
+
+        expect(await cancelOrder(strUserId, strFirstNo)).toBe(true);
+        const objCancelled = await getOrderByNo(strUserId, strFirstNo);
+        expect(objCancelled?.status).toBe("CANCELLED");
+        expect(objCancelled?.cancelledAt).not.toBeNull();
+        expect(await cancelOrder(strUserId, strFirstNo)).toBe(false);
+    });
+
+    it("已出貨（下單滿 24 小時）的訂單不能取消；別人的訂單也不能取消", async () => {
+        await addCartItem(strUserId, "galaxy-s25", 1);
+        const strOrderNo = createOrderNo(new Date());
+        await createOrderFromCart(strUserId, strOrderNo, objOrderData);
+
+        expect(await cancelOrder("00000000-0000-0000-0000-000000000000", strOrderNo)).toBe(false);
+
+        await getSql().query("UPDATE TBL_ORDER SET CREATED_AT = NOW() - INTERVAL '25 hours' WHERE ORDER_NO = $1", [strOrderNo]);
+        expect(await cancelOrder(strUserId, strOrderNo)).toBe(false);
+        expect((await getOrderByNo(strUserId, strOrderNo))?.status).toBe("PAID");
     });
 });

@@ -10,6 +10,7 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／會員註冊登入]
+[2026-10-04] [flyqazwsx] [標題改為帳戶管理]
 */
 
 import { AccountView } from "@neondatabase/auth-ui";
@@ -18,7 +19,7 @@ import type { Metadata } from "next";
 
 export const dynamicParams = false;
 
-export const metadata: Metadata = { title: "會員專區" };
+export const metadata: Metadata = { title: "帳戶管理" };
 
 /**
  * 產生帳號頁路徑（本站只開放帳號設定與安全性）
@@ -38,7 +39,7 @@ export default async function AccountPage(_objProps: PageProps<"/account/[path]"
 
     return (
         <div className="py-2">
-            <h1 className="mb-4 text-2xl font-bold text-slate-900">會員專區</h1>
+            <h1 className="mb-4 text-2xl font-bold text-slate-900">帳戶管理</h1>
             <AccountView path={objParams.path} />
         </div>
     );

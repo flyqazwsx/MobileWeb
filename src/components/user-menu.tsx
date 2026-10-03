@@ -10,6 +10,7 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／會員註冊登入]
+[2026-10-04] [flyqazwsx] [使用者選單改為「帳戶管理」與「訂單管理」]
 */
 
 "use client";
@@ -38,7 +39,15 @@ export default function UserMenu() {
             </SignedOut>
 
             <SignedIn>
-                <UserButton size="icon" />
+                {/* [2026-10-04] [下拉選單：帳戶管理（變更密碼）、訂單管理；取代預設的帳號設定連結] */}
+                <UserButton
+                    size="icon"
+                    disableDefaultLinks
+                    additionalLinks={[
+                        { href: "/account/security", label: "帳戶管理", signedIn: true },
+                        { href: "/orders", label: "訂單管理", signedIn: true },
+                    ]}
+                />
             </SignedIn>
         </div>
     );

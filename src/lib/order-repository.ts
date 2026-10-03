@@ -10,10 +10,12 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-04] [flyqazwsx] [系統初版／結帳]
+[2026-10-04] [flyqazwsx] [新增訂單列表與取消訂單]
 */
 
 import type { CheckoutOrderData } from "@/lib/checkout";
 import { getSql } from "@/lib/db";
+import { INT_CANCELLABLE_HOURS } from "@/lib/order-tracking";
 import type { Order, OrderItem, OrderStatus } from "@/lib/types";
 
 /** 訂單主檔資料列（PostgreSQL 欄位名稱為小寫） */
@@ -155,4 +157,32 @@ export async function getOrderByNo(_strUserId: string, _strOrderNo: string): Pro
     ]);
 
     return arrRows.length > 0 ? convertOrderRow(arrRows[0] as OrderRow) : null;
+}
+
+/**
+ * 取得會員的所有訂單（新到舊）
+ * @param {string} _strUserId 會員 ID
+ * @returns {Promise<Order[]>} 訂單清單
+ */
+export async function getOrders(_strUserId: string): Promise<Order[]> {
+    const arrRows = await getSql().query(`${STR_ORDER_SELECT} WHERE O.USER_ID = $1 ORDER BY O.CREATED_AT DESC, O.ORDER_NO`, [_strUserId]);
+    return (arrRows as OrderRow[]).map(convertOrderRow);
+}
+
+/**
+ * 取消訂單：只有本人、已付款且尚未出貨（下單未滿 INT_CANCELLABLE_HOURS 小時）的訂單可以取消
+ * @param {string} _strUserId 會員 ID
+ * @param {string} _strOrderNo 訂單編號
+ * @returns {Promise<boolean>} 是否取消成功
+ */
+export async function cancelOrder(_strUserId: string, _strOrderNo: string): Promise<boolean> {
+    const arrRows = await getSql().query(
+        `UPDATE TBL_ORDER SET STATUS = 'CANCELLED', CANCELLED_AT = NOW()
+         WHERE USER_ID = $1 AND ORDER_NO = $2 AND STATUS = 'PAID'
+           AND CREATED_AT > NOW() - MAKE_INTERVAL(hours => $3)
+         RETURNING ORDER_NO`,
+        [_strUserId, _strOrderNo, INT_CANCELLABLE_HOURS],
+    );
+
+    return arrRows.length > 0;
 }
