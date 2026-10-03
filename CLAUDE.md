@@ -76,14 +76,15 @@ Next.js 16（App Router、Turbopack、React 19、Tailwind CSS v4、TypeScript）
   - Auth URL 由整合注入為 `DATABASE_NEON_AUTH_BASE_URL`（有前綴，不是文件寫的 `NEON_AUTH_BASE_URL`）；`NEON_AUTH_COOKIE_SECRET` 另以 `vercel env add` 設定。
   - UI 字串在 `localization-zh-tw.ts`；Neon client 的錯誤代碼位置與 better-auth-ui 預期不同，錯誤 toast 由 `translate-auth-message.ts` 以英文訊息反查中文，伺服器新出現的英文訊息要補進對照表。
   - Neon 代管版沒有 `delete-user` API（回 404），所以不提供刪除帳號。
+- **購物車**：`TBL_CART_ITEM`（PK 會員 + 手機，數量 1–99）。`USER_ID` 外鍵到 `neon_auth."user"(id)` ON DELETE CASCADE；`PHONE_SLUG` 外鍵為 `DEFERRABLE INITIALLY DEFERRED`，讓 `db:seed` 在同一交易內刪除再重建手機資料不被擋（真的移除某支手機時 seed 會在 commit 失敗，需先清購物車）。規則在 `src/lib/cart.ts`、資料存取在 `src/lib/cart-repository.ts`、Server Actions 在 `src/app/cart/actions.ts`（一律以伺服器端 session 取會員 ID）。頁首件數由 `CartProvider`（瀏覽器端 context，件數連同會員 ID 保存）供 `CartIcon` 與 `AddToCart` 共用；`/cart` 為 `force-dynamic` 並由 proxy 保護。
 - **評測**：`src/lib/review-links.ts` 目前依手機名稱產生 YouTube/Facebook/Instagram 搜尋連結，尚未收錄實際影片。
 - **熱門月份**：首頁標題用 `new Date()` 計算，因頁面為靜態產生，顯示的是 build 當下的月份。
 
 # 目前狀態與待辦
 
 - 規格與價格是**示範資料**（依公開資訊整理，未與手機王、傑昇通信逐筆核對）；`src/data/data-integrity.test.ts` 定義資料必須滿足的規則（代碼唯一、品牌對應、排名不重複、售價 ≤ 建議售價等），日後資料匯入也要通過。
-- 已完成：Neon 資料庫、Vercel 部署（push `main` 自動部署）、產品圖（Nothing Phone (3a) Pro 手機王未收錄，仍為佔位圖）、會員註冊登入（Email + 密碼）。
-- 尚未完成：正式資料爬取（手機王、傑昇通信）、評測影片收錄、購物車／訂單等電商功能。
+- 已完成：Neon 資料庫、Vercel 部署（push `main` 自動部署）、產品圖（Nothing Phone (3a) Pro 手機王未收錄，仍為佔位圖）、會員註冊登入（Email + 密碼）、購物車。
+- 尚未完成：正式資料爬取（手機王、傑昇通信）、評測影片收錄、結帳／訂單／付款。
 
 # 程式碼慣例
 

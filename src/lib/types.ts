@@ -9,6 +9,7 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
+[2026-10-04] [flyqazwsx] [新增購物車項目型別]
 */
 
 /** 手機品牌 */
@@ -87,4 +88,20 @@ export interface ReviewLink {
     platform: ReviewPlatform;
     label: string;
     url: string;
+}
+
+/** 購物車中的一項商品（依加入時間排序顯示） */
+export interface CartItem {
+    /** 手機代碼 */
+    phoneSlug: string;
+    /** 手機名稱 */
+    phoneName: string;
+    /** 圖片網址；無圖片時為 null */
+    imageUrl: string | null;
+    /** 品牌代表色（佔位圖用） */
+    brandColor: string;
+    /** 單價（本站售價，新台幣） */
+    unitPriceTwd: number;
+    /** 數量 */
+    quantity: number;
 }
