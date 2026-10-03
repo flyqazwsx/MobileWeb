@@ -1,0 +1,55 @@
+/*
+MobileWeb Migration 003
+名稱：建立訂單資料表
+說明：結帳時由購物車建立訂單。訂單明細保存下單當下的品名與單價（快照），日後售價變動不影響既有訂單；
+      付款資料只存卡別與末四碼，完整卡號、有效期限、安全碼一律不落地。
+      狀態：PAID（已付款）、CANCELLED（已取消）；物流進度由下單時間推算（示範用），不另存欄位
+
+[Change Log]
+--------------------------------------------------------------------------------
+Format: [YYYY-MM-DD] [Author] [Description]
+Rule: One change per line. Append new entries at the bottom.
+--------------------------------------------------------------------------------
+[2026-10-04] [flyqazwsx] [系統初版／結帳]
+*/
+
+-- 訂單主檔
+CREATE TABLE IF NOT EXISTS TBL_ORDER (
+    ORDER_ID          UUID          NOT NULL,
+    ORDER_NO          VARCHAR(30)   NOT NULL,
+    USER_ID           UUID          NOT NULL,
+    STATUS            VARCHAR(20)   NOT NULL DEFAULT 'PAID',
+    RECIPIENT_NAME    VARCHAR(50)   NOT NULL,
+    RECIPIENT_PHONE   VARCHAR(20)   NOT NULL,
+    SHIPPING_ADDRESS  VARCHAR(200)  NOT NULL,
+    PAYMENT_METHOD    VARCHAR(20)   NOT NULL,
+    CARD_BRAND        VARCHAR(20)   NOT NULL,
+    CARD_LAST4        CHAR(4)       NOT NULL,
+    TOTAL_TWD         INTEGER       NOT NULL,
+    CREATED_AT        TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+    CANCELLED_AT      TIMESTAMPTZ   NULL,
+    CONSTRAINT PK_TBL_ORDER PRIMARY KEY (ORDER_ID),
+    CONSTRAINT FK_TBL_ORDER_USER FOREIGN KEY (USER_ID) REFERENCES neon_auth."user" (id) ON DELETE CASCADE,
+    CONSTRAINT CK_TBL_ORDER_STATUS CHECK (STATUS IN ('PAID', 'CANCELLED')),
+    CONSTRAINT CK_TBL_ORDER_PAYMENT_METHOD CHECK (PAYMENT_METHOD IN ('CREDIT_CARD')),
+    CONSTRAINT CK_TBL_ORDER_CARD_LAST4 CHECK (CARD_LAST4 ~ '^\d{4}$'),
+    CONSTRAINT CK_TBL_ORDER_TOTAL CHECK (TOTAL_TWD > 0)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS UIX_TBL_ORDER_ORDER_NO ON TBL_ORDER (ORDER_NO);
+
+CREATE INDEX IF NOT EXISTS IX_TBL_ORDER_USER_CREATED ON TBL_ORDER (USER_ID, CREATED_AT DESC);
+
+-- 訂單明細（品名、單價為下單當下快照，不設手機外鍵，手機下架後訂單仍可查）
+CREATE TABLE IF NOT EXISTS TBL_ORDER_ITEM (
+    ORDER_ID        UUID          NOT NULL,
+    PHONE_SLUG      VARCHAR(100)  NOT NULL,
+    PHONE_NAME      VARCHAR(200)  NOT NULL,
+    IMAGE_URL       TEXT          NULL,
+    UNIT_PRICE_TWD  INTEGER       NOT NULL,
+    QUANTITY        INTEGER       NOT NULL,
+    CONSTRAINT PK_TBL_ORDER_ITEM PRIMARY KEY (ORDER_ID, PHONE_SLUG),
+    CONSTRAINT FK_TBL_ORDER_ITEM_ORDER FOREIGN KEY (ORDER_ID) REFERENCES TBL_ORDER (ORDER_ID) ON DELETE CASCADE,
+    CONSTRAINT CK_TBL_ORDER_ITEM_QUANTITY CHECK (QUANTITY BETWEEN 1 AND 99),
+    CONSTRAINT CK_TBL_ORDER_ITEM_PRICE CHECK (UNIT_PRICE_TWD > 0)
+);

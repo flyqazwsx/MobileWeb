@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 // E2E 共用的會員操作；測試帳號一律使用 e2e-*@example.com，由 e2e/global-teardown.ts 於測試結束後清除
 
@@ -22,9 +22,17 @@ export function createTestEmail(_strPrefix: string): string {
  */
 export async function signUp(_objPage: Page, _strEmail: string): Promise<void> {
     await _objPage.goto("/auth/sign-up");
-    await _objPage.getByLabel("名稱").fill("E2E 測試");
-    await _objPage.getByLabel("電子郵件").fill(_strEmail);
-    await _objPage.getByLabel("密碼").fill(STR_TEST_PASSWORD);
+
+    // 頁面 hydration 完成前填入的值可能被 React 重設（實測密碼欄被清空），確認三個欄位都有值才送出
+    await expect(async () => {
+        await _objPage.getByLabel("名稱").fill("E2E 測試");
+        await _objPage.getByLabel("電子郵件").fill(_strEmail);
+        await _objPage.getByLabel("密碼").fill(STR_TEST_PASSWORD);
+        await expect(_objPage.getByLabel("名稱")).toHaveValue("E2E 測試", { timeout: 500 });
+        await expect(_objPage.getByLabel("電子郵件")).toHaveValue(_strEmail, { timeout: 500 });
+        await expect(_objPage.getByLabel("密碼")).toHaveValue(STR_TEST_PASSWORD, { timeout: 500 });
+    }).toPass({ timeout: 10_000 });
+
     await _objPage.getByRole("button", { name: "建立帳號" }).click();
 }
 

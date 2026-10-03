@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     formatCapacityList,
+    formatDateTime,
     formatDimensions,
     formatPrice,
     formatRankingMonth,
@@ -70,5 +71,12 @@ describe("formatReleaseMonth / formatRankingMonth", () => {
     it("排行月份以傳入日期為準", () => {
         expect(formatRankingMonth(new Date(2026, 9, 3))).toBe("2026 年 10 月");
         expect(formatRankingMonth(new Date(2027, 0, 31))).toBe("2027 年 1 月");
+    });
+});
+
+describe("formatDateTime", () => {
+    it("以台灣時區顯示年月日時分（24 小時制）", () => {
+        expect(formatDateTime("2026-10-04T06:05:00Z")).toBe("2026/10/04 14:05");
+        expect(formatDateTime("2026-10-03T16:30:00Z")).toBe("2026/10/04 00:30");
     });
 });

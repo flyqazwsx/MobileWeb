@@ -9,6 +9,7 @@ Format: [YYYY-MM-DD] [Author] [Description]
 Rule: One change per line. Append new entries at the bottom.
 --------------------------------------------------------------------------------
 [2026-10-03] [flyqazwsx] [系統初版／基本原型]
+[2026-10-04] [flyqazwsx] [新增日期時間格式化（訂單用）]
 */
 
 import type { PhoneSpecs } from "@/lib/types";
@@ -73,4 +74,25 @@ export function formatReleaseMonth(_strReleaseMonth: string): string {
  */
 export function formatRankingMonth(_dtNow: Date): string {
     return `${_dtNow.getFullYear()} 年 ${_dtNow.getMonth() + 1} 月`;
+}
+
+/**
+ * 格式化日期時間（台灣時區），例如 "2026/10/04 14:05"
+ * @param {string} _strIso ISO 8601 時間字串
+ * @returns {string} 顯示文字
+ */
+export function formatDateTime(_strIso: string): string {
+    // 用 formatToParts 自行組字串：各版本 ICU 在日期與時間之間的空白字元不同（例如 U+2009）
+    const arrParts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+    }).formatToParts(new Date(_strIso));
+    const objParts = Object.fromEntries(arrParts.map((_objPart) => [_objPart.type, _objPart.value]));
+
+    return `${objParts.year}/${objParts.month}/${objParts.day} ${objParts.hour}:${objParts.minute}`;
 }
