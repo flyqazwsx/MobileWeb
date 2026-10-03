@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* 原型階段固定淺色主題；中文字型以系統內建字型為主 */
+@theme inline {
+    --font-sans: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+}
+
+body {
+    background: #f8fafc;
+    color: #0f172a;
+}
