@@ -82,6 +82,7 @@ npm run dev
 
 - 會員資料存在同一個 Neon 資料庫的 `neon_auth` schema（`neon_auth."user"` 等），由 Neon 代管。
 - 首頁、品牌頁、手機頁仍為靜態產生；頁首的會員選單在瀏覽器端取得登入狀態。
+- **信任網域**：Neon Console → Settings → Auth → Domains 必須列出網站網址，否則註冊、登入會回 `Invalid origin`（localhost 預設允許）。目前已加入正式站 `https://mobile-web-self.vercel.app` 與分支預覽網址；新分支或自訂網域要另外加。
 - 不提供刪除帳號：Neon 代管的 Better Auth 沒有 `delete-user` API。
 - E2E 註冊的測試帳號一律用 `e2e-*@example.com`，測試結束後由 `e2e/global-teardown.ts` 以 SQL 刪除。
 
